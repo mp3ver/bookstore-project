@@ -1,0 +1,28 @@
+version: "3.0"
+
+services:
+
+  db:
+    build: ./bookstore_db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysqlpass"
+      MYSQL_ROOT_HOST: "%"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root ", "-p23Zed5845874521"]
+      timeout: 1s
+      retries: 50
+
+  app:
+    build: ./bookstore_back
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  front:
+    build: ./bookstore_front
+    ports:
+      - "80:80"
